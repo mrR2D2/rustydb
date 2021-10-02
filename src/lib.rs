@@ -1,3 +1,5 @@
+mod memtable;
+
 #[cfg(test)]
 mod tests {
     #[test]

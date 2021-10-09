@@ -1,7 +1,7 @@
 use crate::wal;
 use std::fs::{File, OpenOptions};
 use std::io::prelude::*;
-use std::io::{self, BufReader};
+use std::io::{BufReader, Result as IoResult};
 use std::path::{PathBuf};
 
 /* WAL entry has the following format:
@@ -9,12 +9,12 @@ use std::path::{PathBuf};
 | tombstone (1B) | timestamp (16B) | k_size (8B) | key | v_size (8B) | value |
 +----------------+-----------------+-------------+-----+-------------+-------+
 
-    k_size = Length of the Key data.
     tombstone = If this record was deleted and has a value.
-    v_size = Length of the Value data.
-    key = Key data.
-    value = Value data.
     timestamp = Timestamp of the operation in microseconds.
+    k_size = Length of the Key data.
+    key = Key data.
+    v_size = Length of the Value data.
+    value = Value data.
  */
 
 pub struct WalIterator {
@@ -23,10 +23,10 @@ pub struct WalIterator {
 
 impl WalIterator {
 
-    fn new(path: PathBuf) -> io::Result<WalIterator> {
+    pub fn new(path: PathBuf) -> IoResult<WalIterator> {
         let file = OpenOptions::new().read(true).open(path)?;
         let reader = BufReader::new(file);
-        Ok(WalIterator {reader} )
+        Ok(WalIterator { reader })
     }
 
     fn read_size(&mut self) -> Option<usize> {

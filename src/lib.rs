@@ -1,6 +1,7 @@
 mod memtable;
 mod wal_iterator;
 mod wal;
+mod utils;
 
 #[cfg(test)]
 mod tests {

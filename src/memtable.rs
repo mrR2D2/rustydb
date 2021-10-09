@@ -12,7 +12,7 @@ pub struct MemTableEntry {
 }
 
 impl MemTable {
-    fn new() -> MemTable {
+    pub fn new() -> MemTable {
         MemTable {
             entries: Vec::new(),
             size: 0,
@@ -24,7 +24,7 @@ impl MemTable {
             .binary_search_by_key(&key, |e| e.key.as_slice())
     }
 
-    fn set(&mut self, key: &[u8], value: &[u8], timestamp: u128) {
+    pub fn set(&mut self, key: &[u8], value: &[u8], timestamp: u128) {
         let entry = MemTableEntry {
             key: key.to_owned(),
             value: Some(value.to_owned()),
@@ -49,7 +49,7 @@ impl MemTable {
         }
     }
 
-    fn delete(&mut self, key: &[u8], timestamp: u128) {
+    pub fn delete(&mut self, key: &[u8], timestamp: u128) {
         let entry = MemTableEntry {
             key: key.to_owned(),
             value: None,
@@ -70,14 +70,14 @@ impl MemTable {
         }
     }
 
-    fn get(&self, key: &[u8]) -> Option<&MemTableEntry> {
+    pub fn get(&self, key: &[u8]) -> Option<&MemTableEntry> {
         if let Ok(idx) = self.get_index(key) {
             return Some(&self.entries[idx]);
         }
         None
     }
 
-    fn len(&self) -> usize {
+    pub fn len(&self) -> usize {
         self.entries.len()
     }
 }

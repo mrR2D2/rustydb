@@ -1,3 +1,5 @@
+mod iterator;
+
 use std::fs::{File, OpenOptions, remove_file};
 use std::io::{BufWriter, Write, Result as IoResult};
 use std::path::{Path, PathBuf};
@@ -5,7 +7,6 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::memtable;
 use crate::utils;
-use crate::wal_iterator::WalIterator;
 
 /* WAL entry has the following format:
 +----------------+-----------------+-------------+-----+-------------+-------+
@@ -35,10 +36,10 @@ pub struct Wal {
 
 impl IntoIterator for Wal {
     type Item = WalEntry;
-    type IntoIter = WalIterator;
+    type IntoIter = iterator::WalIterator;
 
     fn into_iter(self) -> Self::IntoIter {
-        WalIterator::new(self.path).unwrap()
+        iterator::WalIterator::new(self.path).unwrap()
     }
 }
 
